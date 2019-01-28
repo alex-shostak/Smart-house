@@ -1,3 +1,4 @@
+import utime
 import log
 import led
 import wifi
@@ -26,7 +27,8 @@ class Main(object):
             try:
                 if movement_sensor.movement_detected():
                     movement_sensor.save_data()
-                listener.listen()
+                #listener.listen()
+                utime.sleep(1)
             except Exception as e:
                 log.write("Main.loop: " + str(e))
                 led.blink(1, 1)

@@ -1,8 +1,9 @@
 import os
 import machine
 import time_
+import config
 
-sensor_pin = machine.Pin(4, machine.Pin.IN)
+sensor_pin = machine.Pin(config.GPIO.sensor_pin, machine.Pin.IN)
 folder = 'sensor_data'
 try:
     os.mkdir(folder)
@@ -12,7 +13,7 @@ path = folder + '/movement.txt'
 
 
 def movement_detected():
-    return sensor_pin.value() == 0
+    return sensor_pin.value() == 1
 
 
 def save_data():
