@@ -2,9 +2,7 @@ import utime
 import log
 import led
 import wifi
-import config
 import movement_sensor
-from listener import listener
 import time_
 
 
@@ -17,25 +15,43 @@ class Main(object):
         led.blink(1)
         time_.set_time()
         led.blink(1)
-        listener.start(port=config.Listener.port)
-        listener.on_request = self.on_request
-        led.blink(1)
+        self._last_mode_check_time = utime.localtime()
 
     def loop(self):
-        log.write('starting main loop')
+        log.append('starting main loop')
         while True:
             try:
+                if self._is_time_to_check_mode():
+                    movement_sensor.is_sleep_mode = self._get_mode() == "SLEEP"
+                    self._last_mode_check_time = utime.localtime()
+                if movement_sensor.is_sleep_mode:
+                    continue
                 if movement_sensor.movement_detected():
                     movement_sensor.save_data()
-                #listener.listen()
+                if movement_sensor.data_exists():
+                    self._send_data()
+                    movement_sensor.delete_data()
+                    movement_sensor.is_sleep_mode = True
                 utime.sleep(1)
             except Exception as e:
                 log.write("Main.loop: " + str(e))
                 led.blink(1, 1)
 
-    def on_request(self, request, client):
-        for line in movement_sensor.get_data():
-            client.send(line.replace('\n', '\r\n').encode())
+    def _get_mode(self):
+        pass
+
+    def _is_time_to_check_mode(self):
+        yy, mm, dd, hh, mi, ss, mss, mcss = self._last_mode_check_time
+        if ss + 20 < 60:
+            ss += 20
+        else:
+            ss = 20 - (60 - ss)
+            mi += 1
+
+        return utime.localtime() > (yy, mm, dd, hh, mi, ss, mss, mcss)
+
+    def _send_data(self):
+        pass
 
 
 Main().loop()

@@ -9,7 +9,9 @@ try:
     os.mkdir(folder)
 except:
     pass
+
 path = folder + '/movement.txt'
+is_sleep_mode = True
 
 
 def movement_detected():
@@ -17,8 +19,17 @@ def movement_detected():
 
 
 def save_data():
-    with open(path, 'a') as f:
+    with open(path, 'w') as f:
         print(time_.get_time(), file=f)
+
+
+def delete_data():
+    with open(path, 'w'):
+        pass
+
+
+def data_exists():
+    return os.path.isfile(path) and os.path.getsize(path) > 0
 
 
 def get_data():

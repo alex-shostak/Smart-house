@@ -6,9 +6,9 @@ import log
 def set_time():
     try:
         ntptime.settime()
-        log.write('time: ' + get_time())
+        log.append('time: ' + get_time())
     except Exception as e:
-        log.write('Main._set_time: ' + str(e))
+        log.append('Main._set_time: ' + str(e))
 
 
 def get_time():

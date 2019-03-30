@@ -12,9 +12,9 @@ class Listener(object):
             self._socket = socket.socket()
             self._socket.bind(("", port))
             self. _socket.listen(1)
-            log.write('listener started on port ' + str(port))
+            log.append('listener started on port ' + str(port))
         except Exception as e:
-            log.write("Listener.start: " + str(e))
+            log.append("Listener.start: " + str(e))
             led.on()
             raise
 
@@ -31,7 +31,7 @@ class Listener(object):
             self.on_request(request, client)
             client.close()
         except Exception as e:
-            log.write("Listener.listen: " + str(e))
+            log.append("Listener.listen: " + str(e))
             led.blink(1, 1)
 
     def on_request(self, request, client):
