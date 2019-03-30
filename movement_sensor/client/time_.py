@@ -13,8 +13,8 @@ def set_time():
 
 def add_seconds(time, seconds):
     """
-    adds seconds to specified time tuple.
-    :param time:
+    adds seconds to specified time.
+    :param time: 8-tuple
     :param seconds: seconds to add. !current implementation supports only values <= 60 seconds
     """
     yy, mm, dd, hh, mi, ss, mss, mcss = time
