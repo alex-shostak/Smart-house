@@ -41,14 +41,7 @@ class Main(object):
         pass
 
     def _is_time_to_check_mode(self):
-        yy, mm, dd, hh, mi, ss, mss, mcss = self._last_mode_check_time
-        if ss + 20 < 60:
-            ss += 20
-        else:
-            ss = 20 - (60 - ss)
-            mi += 1
-
-        return utime.localtime() > (yy, mm, dd, hh, mi, ss, mss, mcss)
+        return utime.localtime() > time_.add_seconds(self._last_mode_check_time, 20)
 
     def _send_data(self):
         pass
