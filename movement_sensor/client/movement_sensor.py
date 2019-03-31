@@ -12,7 +12,14 @@ except:
     pass
 
 path = folder + '/movement.txt'
-_mode = "SLEEP"
+
+
+class Mode:
+    SLEEP = "S"
+    ACTIVE = "A"
+
+
+_mode = Mode.SLEEP
 _last_mode_check_time = utime.localtime()
 
 
@@ -27,7 +34,7 @@ def set_mode(mode):
 
 
 def is_sleep_mode():
-    return _mode == "SLEEP"
+    return _mode == Mode.SLEEP
 
 
 def movement_detected():

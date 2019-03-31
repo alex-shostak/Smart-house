@@ -29,7 +29,7 @@ def loop():
             if movement_sensor.data_exists():
                 send_data()
                 movement_sensor.delete_data()
-                movement_sensor.is_sleep_mode = True
+                movement_sensor.set_mode(movement_sensor.Mode.SLEEP)
             utime.sleep(1)
         except Exception as e:
             log.write("loop: " + str(e))
