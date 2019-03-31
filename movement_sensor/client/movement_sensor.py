@@ -1,5 +1,6 @@
 import os
 import machine
+import utime
 import time_
 import config
 
@@ -11,7 +12,22 @@ except:
     pass
 
 path = folder + '/movement.txt'
-is_sleep_mode = True
+_mode = "SLEEP"
+_last_mode_check_time = utime.localtime()
+
+
+def is_time_to_check_mode():
+    return utime.localtime() > time_.add_seconds(_last_mode_check_time, 20)
+
+
+def set_mode(mode):
+    global _last_mode_check_time, _mode
+    _last_mode_check_time = utime.localtime()
+    _mode = mode
+
+
+def is_sleep_mode():
+    return _mode == "SLEEP"
 
 
 def movement_detected():
