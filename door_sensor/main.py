@@ -25,17 +25,12 @@ def loop():
                 mode = get_mode()
                 sensor.set_mode(mode)
             if sensor.is_sleep_mode():
+                #log.write('0')
                 continue
+            #log.write('1')
             if sensor.door_opened():
-                #sensor.save_data()
-                send_data(time_.get_time())
-            #data = sensor.get_data()
-            #if data:
-                #pass
-                #log.write(data)
-                #send_data(data)
-                #sensor.delete_data()
-                #sensor.set_mode(sensor.Mode.SLEEP)
+                #log.write('2')
+                send_event('door_open')
             utime.sleep(1)
         except Exception as e:
             log.write("loop: " + str(e))
@@ -46,8 +41,8 @@ def get_mode():
     return http.get('get_mode?log_activity=true')
 
 
-def send_data(data):
-    http.get('post_data?data=' + data)
+def send_event(name):
+    http.get('post_data?data=' + name)
 
 
 loop()

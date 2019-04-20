@@ -26,10 +26,10 @@ class DoorSensorController(object):
     @staticmethod
     @Api.route('/post_data')
     def post_data(request, response):
-        door_open_time = request.POST['data']
-        print(door_open_time)
+        print('test')
+        door_open_time = request.GET.get('data')
         DoorSensorModel.save_door_event(door_open_time)
-        DoorSensorModel.set_sleep_mode()
+        #DoorSensorModel.set_sleep_mode()
         # call handler(send telegram message)
 
 

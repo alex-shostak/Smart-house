@@ -1,4 +1,3 @@
-import os
 import utime
 import config
 from machine import Pin
@@ -9,13 +8,6 @@ class Mode:
     SLEEP = "S"
     ACTIVE = "A"
 
-
-sensor_data_folder = 'sensor_data'
-sensor_data_file = sensor_data_folder + '/movement.txt'
-try:
-    os.mkdir(sensor_data_folder)
-except:
-    pass
 
 _pin = Pin(config.GPIO.sensor_pin, Pin.IN, Pin.PULL_UP)
 _mode = Mode.SLEEP
@@ -39,17 +31,3 @@ def set_mode(mode):
 def door_opened():
     return _pin.value() == 1
 
-
-def save_data():
-    with open(sensor_data_file, 'w') as f:
-        print(time_.get_time(), file=f)
-
-
-def delete_data():
-    with open(sensor_data_file, 'w'):
-        pass
-
-
-def get_data():
-    with open(sensor_data_file, 'r') as f:
-        return f.read()
