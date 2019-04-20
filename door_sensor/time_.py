@@ -23,6 +23,7 @@ def add_seconds(time, seconds):
     else:
         ss = seconds - (60 - ss)
         mi += 1
+    return yy, mm, dd, hh, mi, ss, mss, mcss
 
 
 def get_time():

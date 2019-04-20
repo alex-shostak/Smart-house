@@ -50,5 +50,6 @@ def delete_data():
         pass
 
 
-def data_exists():
-    return os.path.isfile(sensor_data_file) and os.path.getsize(sensor_data_file) > 0
+def get_data():
+    with open(sensor_data_file, 'r') as f:
+        return f.read()

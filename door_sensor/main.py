@@ -1,9 +1,11 @@
 import utime
+import http
 import log
 import led
 import wifi
 import time_
 import sensor
+
 
 
 log.remove()
@@ -26,10 +28,13 @@ def loop():
                 continue
             if sensor.door_opened():
                 sensor.save_data()
-            if sensor.data_exists():
-                send_data()
-                sensor.delete_data()
-                sensor.set_mode(sensor.Mode.SLEEP)
+            data = sensor.get_data()
+            if data:
+                pass
+                #log.write(data)
+                #send_data(data)
+                #sensor.delete_data()
+                #sensor.set_mode(sensor.Mode.SLEEP)
             utime.sleep(1)
         except Exception as e:
             log.write("loop: " + str(e))
@@ -37,10 +42,11 @@ def loop():
 
 
 def get_mode():
-    pass
+    return http.get('get_mode?log_activity=true')
 
 
-def send_data():
-    pass
+def send_data(data):
+    http.get('post_data?data=' + data)
+
 
 loop()
