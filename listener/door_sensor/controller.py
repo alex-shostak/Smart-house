@@ -16,7 +16,6 @@ class DoorSensorController(object):
     @staticmethod
     @Api.route('/set_mode')
     def set_mode(request, response):
-        pass
         # authenticate?
         mode = request.GET.get('mode')
         if mode is None:
@@ -28,6 +27,7 @@ class DoorSensorController(object):
     @Api.route('/post_data')
     def post_data(request, response):
         door_open_time = request.POST['data']
+        print(door_open_time)
         DoorSensorModel.save_door_event(door_open_time)
         DoorSensorModel.set_sleep_mode()
         # call handler(send telegram message)

@@ -27,10 +27,11 @@ def loop():
             if sensor.is_sleep_mode():
                 continue
             if sensor.door_opened():
-                sensor.save_data()
-            data = sensor.get_data()
-            if data:
-                pass
+                #sensor.save_data()
+                send_data(time_.get_time())
+            #data = sensor.get_data()
+            #if data:
+                #pass
                 #log.write(data)
                 #send_data(data)
                 #sensor.delete_data()
