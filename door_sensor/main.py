@@ -2,8 +2,8 @@ import utime
 import log
 import led
 import wifi
-import movement_sensor
 import time_
+import sensor
 
 
 log.remove()
@@ -19,17 +19,17 @@ def loop():
     log.append('starting main loop')
     while True:
         try:
-            if movement_sensor.is_time_to_check_mode():
+            if sensor.is_time_to_check_mode():
                 mode = get_mode()
-                movement_sensor.set_mode(mode)
-            if movement_sensor.is_sleep_mode():
+                sensor.set_mode(mode)
+            if sensor.is_sleep_mode():
                 continue
-            if movement_sensor.movement_detected():
-                movement_sensor.save_data()
-            if movement_sensor.data_exists():
+            if sensor.door_opened():
+                sensor.save_data()
+            if sensor.data_exists():
                 send_data()
-                movement_sensor.delete_data()
-                movement_sensor.set_mode(movement_sensor.Mode.SLEEP)
+                sensor.delete_data()
+                sensor.set_mode(sensor.Mode.SLEEP)
             utime.sleep(1)
         except Exception as e:
             log.write("loop: " + str(e))
@@ -43,6 +43,4 @@ def get_mode():
 def send_data():
     pass
 
-
 loop()
-
