@@ -1,6 +1,6 @@
 from helpers.http import Api
 from paste import httpserver
-from door_sensor.controller import DoorSensorController
+import door_sensor.controller
 
 # main WSGI endpoint
 application = Api.as_wsgi

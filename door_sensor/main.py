@@ -39,7 +39,7 @@ def get_mode():
 
 
 def send_event(name):
-    return http.get('post_data?data=' + name) == 'OK'
+    return http.get('save_event?name=' + name) == 'OK'
 
 
 loop()
