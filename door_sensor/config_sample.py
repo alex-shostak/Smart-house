@@ -10,5 +10,6 @@ class GPIO:
     sensor_pin = 4
 
 
-class Listener:
-    port = 80
+class Server:
+    address = "192.168.88.15"
+    port = 8081
