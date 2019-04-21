@@ -7,7 +7,6 @@ import time_
 import sensor
 
 
-
 log.remove()
 wifi.connect()
 led.blink(1)
@@ -25,12 +24,10 @@ def loop():
                 mode = get_mode()
                 sensor.set_mode(mode)
             if sensor.is_sleep_mode():
-                #log.write('0')
                 continue
-            #log.write('1')
             if sensor.door_opened():
-                #log.write('2')
-                send_event('door_open')
+                if send_event('door_open'):
+                    sensor.set_sleep_mode()
             utime.sleep(1)
         except Exception as e:
             log.write("loop: " + str(e))
@@ -42,7 +39,7 @@ def get_mode():
 
 
 def send_event(name):
-    http.get('post_data?data=' + name)
+    return http.get('post_data?data=' + name) == 'OK'
 
 
 loop()

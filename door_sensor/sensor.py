@@ -22,10 +22,14 @@ def is_sleep_mode():
     return _mode == Mode.SLEEP
 
 
+def set_sleep_mode():
+    set_mode(Mode.SLEEP)
+
+
 def set_mode(mode):
     global _last_mode_check_time, _mode
-    _last_mode_check_time = utime.localtime()
     _mode = mode
+    _last_mode_check_time = utime.localtime()
 
 
 def door_opened():
