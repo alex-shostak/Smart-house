@@ -1,7 +1,7 @@
 from helpers.http import Api
 from paste import httpserver
 import telegram_worker
-import controller
+import sensor_controller
 
 
 # main WSGI endpoint
