@@ -1,3 +1,0 @@
-class TelegramConfig:
-    BOT_TOKEN = "752125381:AAHZtMmxpRbQKF8aTOE1aTyP1zAyX9XD-SY"
-    CHAT_ID = "-1001375176524"

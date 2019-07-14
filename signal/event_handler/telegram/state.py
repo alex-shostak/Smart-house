@@ -1,32 +1,9 @@
-import requests
 import json
-
-
-class TelegramApi:
-    @staticmethod
-    def send_message(token, chat_id, text, reply_markup=None):
-        if reply_markup:
-            reply_markup_str = f'&reply_markup={json.dumps(reply_markup)}'
-        else:
-            reply_markup_str = ''
-        response = requests.get(
-            f'https://api.telegram.org/bot{token}/sendMessage?chat_id={chat_id}&text={text}'+reply_markup_str)
-        return response.status_code, response.text
-
-    @staticmethod
-    def get_updates(token, offset):
-        response = requests.get(f'https://api.telegram.org/bot{token}/getUpdates?offset={offset}')
-        return response.text
-
-    @staticmethod
-    def get_chat_members_cnt(token, chat_id):
-        response = requests.get(f'https://api.telegram.org/bot{token}/?chat_id={chat_id}')
-        return json.loads(response.text)['result'] - 1
 
 
 class TelegramState(object):
     def __init__(self):
-        self._path = 'telegram_state.json'
+        self._path = 'state.json'
         with open(self._path, 'r') as f:
             self._data = json.load(f)
 
@@ -55,5 +32,3 @@ class TelegramState(object):
     def _write_state(self):
         with open(self._path, 'w+') as f:
             f.write(json.dumps(self._data))
-
-
