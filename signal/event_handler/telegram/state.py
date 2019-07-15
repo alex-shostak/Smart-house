@@ -1,9 +1,10 @@
+import os
 import json
 
 
 class TelegramState(object):
     def __init__(self):
-        self._path = 'state.json'
+        self._path = os.path.join('telegram', 'state.json')
         with open(self._path, 'r') as f:
             self._data = json.load(f)
 

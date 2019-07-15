@@ -1,6 +1,7 @@
 import time
 import json
 from threading import Thread
+from traceback import format_exc
 from telegram.api import TelegramApi
 from telegram.state import TelegramState
 from telegram.config import TelegramConfig
@@ -14,6 +15,7 @@ class TelegramWorker(object):
         self._state = TelegramState()
         self._thread.daemon = True
         if sensor_state.get_mode() == SensorMode.SLEEP:
+            sensor_state.set_mode(SensorMode.SLEEP)
             self._send_turn_on_question()
 
     def start(self):
@@ -21,20 +23,23 @@ class TelegramWorker(object):
 
     def _handle_updates(self):
         while self._thread.is_alive:
+            try:
+                last_update_id = self._state.get_last_update()
+                updates = json.loads(TelegramApi.get_updates(TelegramConfig.BOT_TOKEN, last_update_id + 1))
+                # todo: ignore other chats
+                for upd in updates['result']:
+                    update_id = upd['update_id']
 
-            last_update_id = self._state.get_last_update()
-            updates = json.loads(TelegramApi.get_updates(TelegramConfig.BOT_TOKEN, last_update_id + 1))
+                    if upd['callback_query']['message']['text'] == 'Кто пришел домой?':
+                        self._handle_arrival_response(upd)
+                    elif upd['callback_query']['data'] == 'turn_on':
+                        self._handle_turn_on_response()
 
-            for upd in updates['result']:
-                update_id = upd['update_id']
-
-                if upd['callback_query']['message']['text'] == 'Кто пришел домой?':
-                    self._handle_arrival_response(upd)
-                elif upd['callback_query']['data'] == 'turn_on':
-                    self._handle_turn_on_response()
-
-                self._state.set_last_update(update_id)
-            time.sleep(1)
+                    self._state.set_last_update(update_id)
+                time.sleep(1)
+            except:
+                print(format_exc())
+                # todo: write log
 
     def _handle_arrival_response(self, upd):
         reply_data = upd['callback_query']['data']
@@ -65,8 +70,9 @@ class TelegramWorker(object):
     @staticmethod
     def _send_turn_on_question():
         reply_markup = {"inline_keyboard": [[{"text": "Включить сигнализацию", "callback_data": "turn_on"}]]}
+        alert_emoji = '\U0001F6A8'
         TelegramApi.send_message(token=TelegramConfig.BOT_TOKEN, chat_id=TelegramConfig.CHAT_ID,
-                                 text='\U0001F6A8', reply_markup=reply_markup)
+                                 text=alert_emoji, reply_markup=reply_markup)
 
     @staticmethod
     def _get_recipient_count():

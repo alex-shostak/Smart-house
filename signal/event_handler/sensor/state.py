@@ -1,3 +1,4 @@
+import os
 import json
 from datetime import datetime
 from threading import Lock
@@ -6,7 +7,7 @@ from threading import Lock
 class SensorState(object):
     def __init__(self):
         self._lock = Lock()
-        self._path = 'state.json'
+        self._path = os.path.join('sensor', 'state.json')
         with open(self._path, 'r') as f:
             self._data = json.load(f)
 

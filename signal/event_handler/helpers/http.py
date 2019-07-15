@@ -33,6 +33,7 @@ class Api:
                 pass
         except:
             print(format_exc())
+            # todo: write log
             http_responses.internal_error(response)
         
     @staticmethod
