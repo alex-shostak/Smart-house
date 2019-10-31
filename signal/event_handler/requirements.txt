@@ -1,5 +1,5 @@
 docopt==0.6.2
-ecdsa==0.13
+ecdsa==0.13.3
 esptool==2.6
 idna==2.8
 Paste==3.0.8
