@@ -272,7 +272,7 @@ src/
 
 # Project config files
 config.py
-
+jam_mon_config.json
 
 
 
