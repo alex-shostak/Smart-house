@@ -11,10 +11,16 @@ def remove():
 
 
 def write(message):
-    with open(file_name, 'w') as f:
-        print(message, file=f)
+    try:
+        with open(file_name, 'w') as f:
+            print(message, file=f)
+    except:
+        pass
 
 
 def append(message):
-    with open(file_name, 'a') as f:
-        print(message, file=f)
+    try:
+        with open(file_name, 'a') as f:
+            print(message, file=f)
+    except:
+        pass

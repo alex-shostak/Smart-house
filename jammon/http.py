@@ -16,7 +16,7 @@ def get(host, uri, use_ssl=True):
         else:
             s.send(req)
         while True:
-            data = s.read(4096) if use_ssl else s.recv(4096)
+            data = s.read(128) if use_ssl else s.recv(128)
             if data:
                 response += str(data, 'utf8')
             else:

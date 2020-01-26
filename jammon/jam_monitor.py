@@ -1,6 +1,7 @@
 import http
 import ujson
 import utime
+from utime import sleep
 import math
 import time_
 
@@ -17,42 +18,50 @@ def read_conf():
 _last_check_time = None
 
 
-def check_jams(display):
+def check_jams(disp):
+    stand_by = True
     for route in routes:
         start_time = route['start_time']
         stop_time = route['stop_time']
         interval = route['interval']
 
-        global _last_check_time
+        localtime = utime.localtime()
+        if not is_working_period(start_time, stop_time, localtime):
+            continue
 
-        if not is_time_to_check(start_time, stop_time, interval):
+        global _last_check_time
+        stand_by = False
+        if not is_time_to_check(interval, localtime):
+            blink(disp)
             continue
 
         _last_check_time = utime.localtime()
-        display.fill(0)
+        disp.fill(0)
         expected_dur = int(route['expected_dur'])
-        actual_dur = get_duration_in_traffic(route['origins'], route['destinations'])
+        actual_dur = get_dur_in_traff(route['origins'], route['destinations'])
         dif = actual_dur - expected_dur
-        if dif > 0:
-            minutes = dif / 60
-            line_cnt = math.ceil(minutes / 5)
-            for i in range(line_cnt):
-                display.line(0, 7 - i, 7, 7 - i, 1)
-                display.show()
+        lvl = math.ceil((dif / 60) / 5) if dif > 0 else 1
+        indicator = route['indicator']
+        for i in range(lvl):
+            y = 0 if indicator == 't' else 7
+            disp.pixel(i, y, 1)
+        disp.show()
+    if stand_by:
+        disp.fill(0)
+        disp.show()
 
 
-def is_time_to_check(start_time, stop_time, interval):
+def is_working_period(start_time, stop_time, localtime):
     start_time_ = make_time(start_time)
     stop_time_ = make_time(stop_time)
-    localtime = utime.localtime()
+    return start_time_ <= localtime <= stop_time_
 
-    if start_time_ <= localtime <= stop_time_:
-        if _last_check_time is None:
-            return True
-        else:
-            return time_.add_seconds(_last_check_time, interval) < localtime
+
+def is_time_to_check(interval, localtime):
+    if _last_check_time is None:
+        return True
     else:
-        return False
+        return time_.add_seconds(_last_check_time, interval) < localtime
 
 
 def make_time(str_time):
@@ -63,9 +72,22 @@ def make_time(str_time):
     return yy, mm, dd, hh_, mi_, ss, wd, dy
 
 
-def get_duration_in_traffic(origins, destinations):
+def get_dur_in_traff(origins, destinations):
     url = 'maps/api/distancematrix/json?origins=' + origins + '&destinations=' + destinations + '&mode=driving&departure_time=now&language=en-US&key=' + api_key
     api_resp = http.get('maps.googleapis.com', url)
     resp_json = ujson.loads(api_resp)
     if len(resp_json['rows']) > 0:
         return resp_json['rows'][0]['elements'][0]['duration_in_traffic']['value']
+
+
+def blink(disp):
+    disp.brightness(0)
+    sleep(0.2)
+    disp.brightness(1)
+    sleep(0.2)
+    disp.brightness(2)
+    sleep(0.1)
+    disp.brightness(3)
+    sleep(0.1)
+    disp.brightness(4)
+    sleep(0.6)
