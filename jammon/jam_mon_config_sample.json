@@ -6,7 +6,8 @@
       "destinations": "50.5119461,30.4966771",
       "expected_dur": 600,
       "start_time": "14:00",
-      "stop_time": "15:30",
+      "stop_time": "17:35",
+      "interval": 60,
       "indicator": {"x" : 1, "y": 7}
     }
   ]
