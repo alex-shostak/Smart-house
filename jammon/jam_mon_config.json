@@ -1,0 +1,13 @@
+{
+  "apiKey": "AIzaSyCURrAtEfrHdx-v6bsIy7zCqyB7ZEnF_ak",
+  "routes": [
+    {
+      "origins": "Kyiv+Svobody%20avenue",
+      "destinations": "50.5119461,30.4966771",
+      "expected_dur": 600,
+      "start_time": "14:00",
+      "stop_time": "15:30",
+      "indicator": {"x" : 1, "y": 7}
+    }
+  ]
+}
