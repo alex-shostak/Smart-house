@@ -1,12 +1,15 @@
-import usocket as socket
-import ussl as ssl
+import socket as socket
+import ssl as ssl
+import gc
 
 
 def get(host, uri, use_ssl=True):
-    response = ''
+    resp = ''
     s = socket.socket()
     try:
+        s.settimeout(30)
         addr = socket.getaddrinfo(host, 443 if use_ssl else 80)[0][-1]
+        gc.collect()
         s.connect(addr)
 
         req = bytes('GET /%s HTTP/1.0\r\nHost: %s\r\n\r\n' % (uri, host), 'utf8')
@@ -18,13 +21,13 @@ def get(host, uri, use_ssl=True):
         while True:
             data = s.read(128) if use_ssl else s.recv(128)
             if data:
-                response += str(data, 'utf8')
+                resp += str(data, 'utf8')
             else:
                 break
-        return _get_response_body(response)
+        return _get_response_body(resp)
     finally:
         s.close()
 
 
-def _get_response_body(response):
-    return response.split('\r\n\r\n')[1]
+def _get_response_body(resp):
+    return resp.split('\r\n\r\n')[1]
