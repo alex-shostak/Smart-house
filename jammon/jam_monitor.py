@@ -16,6 +16,7 @@ def read_conf():
 
 
 _last_check_time = None
+_last_lvl = 0
 
 
 def check_jams(disp):
@@ -30,22 +31,25 @@ def check_jams(disp):
             continue
 
         global _last_check_time
+        global _last_lvl
         stand_by = False
         if not is_time_to_check(interval, localtime):
             blink(disp)
             continue
 
         _last_check_time = utime.localtime()
-        disp.fill(0)
         expected_dur = int(route['expected_dur'])
         actual_dur = get_dur_in_traff(route['origins'], route['destinations'])
         dif = actual_dur - expected_dur
         lvl = math.ceil((dif / 60) / 5) if dif > 0 else 1
-        indicator = route['indicator']
-        for i in range(lvl):
-            y = 0 if indicator == 't' else 7
-            disp.pixel(i, y, 1)
-        disp.show()
+        if lvl != _last_lvl:
+            ind = route['indicator']
+            disp.fill(0)
+            for i in range(lvl):
+                y = 0 if ind == 't' else 7
+                disp.pixel(i, y, 1)
+            disp.show()
+            _last_lvl = lvl
     if stand_by:
         disp.fill(0)
         disp.show()
